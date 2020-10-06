@@ -44,15 +44,3 @@ function countEntropyOfString(string) {
 
 existsSecondArgument();
 countEntropyInFile(process.argv[2]);
-
-
-
-
-
-
-
-
-
-
-
-

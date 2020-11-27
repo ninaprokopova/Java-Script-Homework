@@ -3,32 +3,44 @@
 <title>hemmeing code</title>
 <script>
 function code(){
-let mes = document.getElementById('inpMessage').value;
-mes = mes.split('');
-for(let i = 0; i < mes.length; i++)
-mes[i] *= 1;
-let control = new Array();
-control.push((mes[0] + mes[1] + mes[3])%2);
-control.push((mes[1] + mes[2] + mes[3])%2);
-control.push((mes[0] + mes[2] + mes[3])%2);
-document.getElementById('codedMessage').value = mes.join('') + control.join('');
+	let mes = document.getElementById('inpMessage').value;
+	mes = mes.split('');
+	for(let i = 0; i < mes.length; i++)
+		mes[i] *= 1;
+	let control = new Array();
+	control.push((mes[0] + mes[1] + mes[3])%2);
+	control.push((mes[1] + mes[2] + mes[3])%2);
+	control.push((mes[0] + mes[2] + mes[3])%2);
+	document.getElementById('codedMessage').value = mes.join('') + control.join('');
 }
 
 function decode(){
-let mes = document.getElementById('codedMessage').value;
-mes = mes.split('');
-for(let i = 0; i < mes.length; i++)
-mes[i] *= 1;
-if ((mes[0] + mes[1] + mes[3])%2!=mes[4] && (mes[1] + mes[2] + mes[3])%2 != mes[5] && (mes[0] + mes[2] + mes[3])%2 != mes[6]){
-	mes[3] = Math.abs(mes[3] - 1);
-} else if ((mes[0] + mes[1] + mes[3])%2 != mes[4] && (mes[1] + mes[2] + mes[3])%2 != mes[5]) {
-	mes[1] = Math.abs(mes[1] - 1);
-} else if ((mes[1] + mes[2] + mes[3])%2 != mes[5] && (mes[0] + mes[2] + mes[3])%2 != mes[6]) {
-	mes[2] = Math.abs(mes[2] - 1);
-} else if ((mes[0] + mes[1] + mes[3])%2 != mes[4] && (mes[0] + mes[2] + mes[3])%2 != mes[6]) {
-	mes[2] = Math.abs(mes[2] - 1)
-};
-document.getElementById('decodedMessage').value = mes.join('');
+	let mes = document.getElementById('codedMessage').value;
+	mes = mes.split('');
+	for(let i = 0; i < mes.length; i++)
+		mes[i] *= 1;
+	let placeOfError = 5;
+	if ((mes[0] + mes[1] + mes[3])%2!=mes[4] && (mes[1] + mes[2] + mes[3])%2 != mes[5] && (mes[0] + mes[2] + mes[3])%2 != mes[6]){
+		mes[3] = Math.abs(mes[3] - 1);
+		placeOfError = 4;
+	} else if ((mes[0] + mes[1] + mes[3])%2 != mes[4] && (mes[1] + mes[2] + mes[3])%2 != mes[5]) {
+		mes[1] = Math.abs(mes[1] - 1);
+		placeOfError = 2;
+	} else if ((mes[1] + mes[2] + mes[3])%2 != mes[5] && (mes[0] + mes[2] + mes[3])%2 != mes[6]) {
+		mes[2] = Math.abs(mes[2] - 1);
+		placeOfError = 3;
+	} else if ((mes[0] + mes[1] + mes[3])%2 != mes[4] && (mes[0] + mes[2] + mes[3])%2 != mes[6]) {
+		mes[0] = Math.abs(mes[0] - 1)
+		placeOfError = 1;
+	};
+	let pin = new Array();
+	for(let i = 0; i < 4; i++)
+		pin[i] = mes[i];
+	document.getElementById('decodedMessage').value = pin.join('');
+	if (placeOfError == 5)
+		document.getElementById('placeOfError').textContent = 'placeOfError: all right';
+	else 
+		document.getElementById('placeOfError').textContent = 'placeOfError: ' + placeOfError;
 }
 
 </script>
@@ -40,6 +52,6 @@ document.getElementById('decodedMessage').value = mes.join('');
 <p> <input type='text' id='codedMessage'> Coded message </p>
 <p> <input type='button' value='decode' onClick='decode()'> </p>
 <p> <input type='text' id='decodedMessage'> Decoded message </p>
-<p> <span id='placeOfError'> </span> </p>
+<p> <span id='placeOfError'> placeOfError: </span> </p>
 </body>
 </html>

@@ -1,0 +1,99 @@
+let fs = require('fs');
+//строка считывается из input.txt, который находится в папке с кодом
+inputString = fs.readFileSync('input.txt');
+inputString = inputString.toString();
+//создание словаря букв и их частот
+console.log('Входная строка ', inputString);
+let alph = new Map();
+for(let i = 0; i < inputString.length; i++){
+	if (alph.has(inputString[i]))
+		alph.set(inputString[i], alph.get(inputString[i])+1);
+	else
+		alph.set(inputString[i], 1);
+}
+
+const alphSort = new Map([...alph.entries()].sort((a, b) => b[1] - a[1]));
+let alphLenght = alph.size;
+//создание дерева
+function Node(weight, value, code, used, parent1){
+	this.weight = weight;
+	this.value = value;
+	this.code = code;
+	this.used = used;
+	this.parent1 = parent1;
+}
+let tree = new Array();
+for (let k of alphSort.keys())
+	tree.push(new Node(alph.get(k), k, '', false, -1));
+let countFalse = 0;
+while (true){
+	for (let i = 0; i < tree.length; i++){
+		if (tree[i].used == false)
+			countFalse += 1;
+	}
+	if (countFalse == 1)
+		break;
+	countFalse = 0;
+	let min1 = 0;
+	let min2 = 0;
+	
+	for (let i = 0; i < tree.length; i++){
+		if (tree[i].used == false)
+			min1 = i;
+	}
+	
+	for (let i = 0; i < tree.length; i++){
+		if (tree[i].weight <= tree[min1].weight && tree[i].used == false)
+			min1 = i;
+	}
+	for (let i = 0; i < tree.length; i++){
+		if (tree[i].used == false && i != min1)
+			min2 = i;
+	}
+	for (let i = 0; i < tree.length; i++){
+		if (tree[i].weight <= tree[min2].weight && tree[i].used == false && i != min1)
+			min2 = i;
+	}
+	tree.push(new Node(tree[min1].weight+tree[min2].weight, tree[min1].value+tree[min2].value, '', false, -1));
+	tree[min1].code = '0';
+	tree[min2].code = '1';
+	tree[min1].parent1 = tree.length-1;
+	tree[min2].parent1 = tree.length-1;
+	tree[min1].used = true;
+	tree[min2].used = true;
+}
+//получение кодов для символов из дерева
+for (let i = 0; i <alphLenght; i++){
+	while (true){
+		if (tree[tree[i].parent1].parent1== -1)
+			break;
+		tree[i].code = tree[tree[i].parent1].code + tree[i].code;
+		tree[i].parent1 = tree[tree[i].parent1].parent1;
+	}
+	alph.set(tree[i].value, tree[i].code);
+}
+//кодировка исходной строки
+let outString = '';
+for (let i = 0; i < inputString.length; i++){
+	outString += alph.get(inputString[i]);
+}
+console.log('Закодированная строка ', outString);
+//раскодировка закодированной строки
+let dicryptedStr = '';
+for (let i = 0; i < outString.length;){
+	for (let j = 0; j < alphLenght; j++){
+		let code1 = tree[j].code;
+		if (code1 == outString.substr(i, code1.length)){
+			dicryptedStr += tree[j].value;
+			i = i + code1.length;
+			break;
+		}
+	}
+}
+console.log('Раскодированная строка ', dicryptedStr);
+console.log('Ключ-значение');
+for (let i = 0; i < alphLenght; i++){
+	console.log(tree[i].value, tree[i].code);
+	}
+
+

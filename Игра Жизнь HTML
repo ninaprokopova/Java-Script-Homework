@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<canvas id="myCanvas" width="400" height="400" style="border:1px solid #c3c3c3;">
+Your brouser does not support the canvas element.
+</canvas>
+
+<script>
+let fieldSize = 10;
+let cellSize = 40;
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+ctx.fillStyle = "#FF0000";
+
+let prevField = new Array(fieldSize);
+let field = new Array(fieldSize);
+let i = j = 0;
+let n = m = 0;
+
+for (i = 0; i<fieldSize; i++){
+	field[i] = new Array(fieldSize);
+	prevField[i] = new Array(fieldSize);
+}
+	
+for (i = 0; i<fieldSize; i++)
+	for (j = 0; j<fieldSize; j++){
+		field[i][j] = 0;
+		prevField[i][j] = 0;
+	}
+	
+field[1][2] = 1;
+field[2][3] = 1;
+field[2][4] = 1;
+field[3][2] = 1;
+field[3][3] = 1;
+
+for (i = 0; i < fieldSize; i++)
+		for (j = 0; j < fieldSize; j++){
+			if (field[i][j] == 0)
+				ctx.fillStyle = "#FFFFFF";
+			else
+				ctx.fillStyle = "#3366FF";
+			ctx.fillRect(i*cellSize, j*cellSize, cellSize, cellSize);
+		}		
+		
+function changeMap(){
+for (i = 0; i < fieldSize; i++)
+		for (j = 0; j < fieldSize; j++){
+			let a = field[i][j];
+			prevField[i][j] = a;
+		}	
+for (i = 0; i < fieldSize; i++)
+	for (j = 0; j < fieldSize; j++){
+		let quantityAliveNeibours = 0;
+		for (n = -1; n < 2; n++)
+			for (m = -1; m < 2; m++){
+				if (prevField[(i+n+fieldSize)%fieldSize][(j+m+fieldSize)%fieldSize]==1)
+					quantityAliveNeibours += 1;
+				}
+				if (prevField[i][j] == 1){
+					quantityAliveNeibours -= 1;
+					if (quantityAliveNeibours == 2 || quantityAliveNeibours == 3)
+						field[i][j] = 1;
+					else
+						field[i][j] = 0;
+				} 
+				else {
+					if (quantityAliveNeibours == 3)
+						field[i][j] = 1;
+					else
+						field[i][j] = 0;
+				}
+			}		
+}
+function doStep(){
+	for (i = 0; i < fieldSize; i++)
+		for (j = 0; j < fieldSize; j++){
+			if (field[i][j] == 0)
+				ctx.fillStyle = "#FFFFFF";
+			else
+				ctx.fillStyle = "#3366FF";
+			ctx.fillRect(i*cellSize, j*cellSize, cellSize, cellSize);
+		}		
+	changeMap();
+}
+
+let tm = setInterval(doStep, 300);
+</script>
+
+</body>
+</html>

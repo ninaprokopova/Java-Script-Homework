@@ -1,0 +1,161 @@
+let fs = require('fs');
+//строка считывается из input.txt, который находится в папке с кодом
+inputStr = fs.readFileSync('input.txt');
+inputStr = inputStr.toString();
+console.log('Входная строка ', inputStr);
+вхождение, которое нужно найти, прописывается в программе
+//Полный перебор
+let subStr = 'cad';
+let n = inputStr.length; //длина входной строки
+let m = subStr.length; // длина подстроки
+console.log('Подстрока ', subStr);
+function findPositionsBruteForce(){
+	let positions = new Array();
+	let i = 0;
+	while (i <= n-m+1)
+	{
+		let j = 0;
+		while (inputStr[i+j] == subStr[j]){
+			j++;
+			if (j==m){
+				positions.push(i);
+				break;
+			}
+		}		
+		i++;
+	}
+	return positions;
+}
+let p = findPositionsBruteForce(inputStr, subStr);
+console.log('Совпадающие позиции (алгоритм полного перебора) ' , p);
+//Хэш1
+p = [];
+function countHash(string, begin, end){
+	let hash = 0;
+	for (let z = begin; z <= end; z++)
+		hash += string[z].charCodeAt();
+	return hash;
+}
+let subHs = countHash(subStr, 0, subStr.length-1);
+function findPositionsHash1(){
+	let positions = new Array();
+	let i = 0;
+	let hash = 0
+	while (i <= n-m)
+	{
+		hash = countHash(inputStr, i, i+subStr.length-1);
+		if (hash == subHs){
+			let j = 0;
+			while (inputStr[i+j] == subStr[j]){
+				j++;
+				if (j==m){
+					positions.push(i);
+					break;
+				}
+			}		
+		}
+		i++;
+	}
+	return positions;
+}
+p = findPositionsHash1();
+console.log('Совпадающие позиции (алгоритм с использованием hash1)',p);
+//Рекуррсивный хэш
+p = [];
+let currentHs = countHash(inputStr, 0, subStr.length-1);
+function findPositionsHash2(){
+	let positions = new Array();
+	let i = 0;
+	while (i <= n-m)
+	{
+		if (currentHs == subHs){
+			let j = 0;
+			while (inputStr[i+j] == subStr[j]){
+				j++;
+				if (j==m){
+					positions.push(i);
+					break;
+				}
+			}		
+		}
+		if (i!=n-m)
+			currentHs = currentHs - inputStr[i].charCodeAt() + inputStr[i + subStr.length].charCodeAt()
+		i++;
+	}
+	return positions;
+}
+p = findPositionsHash2();
+console.log('Совпадающие позиции (алгоритм с использованием hash2)',p);
+//Хэш в квадрате
+p = [];
+function countHashSquared(string, begin, end){
+	let hash = 0;
+	for (let z = begin; z <= end; z++)
+		hash += string[z].charCodeAt()*string[z].charCodeAt();
+	return hash;
+};
+let currentHsSquared = countHashSquared(inputStr, 0, subStr.length-1);
+let subHsSquared = countHashSquared(subStr, 0, subStr.length-1);
+function findPositionsHash3(){
+	let positions = new Array();
+	let i = 0;
+	while (i <= n-m)
+	{
+		if (currentHsSquared == subHsSquared){
+			let j = 0;
+			while (inputStr[i+j] == subStr[j]){
+				j++;
+				if (j==m){
+					positions.push(i);
+					break;
+				}
+			}		
+		}
+		if (i!=n-m){
+			let hash1 = inputStr[i].charCodeAt();
+			let hash2 = inputStr[i + subStr.length].charCodeAt();
+			currentHsSquared = currentHsSquared - hash1*hash1 + hash2*hash2;
+		}
+		i++;
+	}
+	return positions;
+}
+p = findPositionsHash3();
+console.log('Совпадающие позиции (алгоритм с использованием hash3)',p);
+//Хэш Рабена Карпа
+p = [];
+function countHashCarp(string, begin, end){
+	let hash = 0;
+	for (let z = begin; z <= end; z++)
+		hash = hash*2 + string[z].charCodeAt();
+	return hash;
+};
+let subStrHsCarp = countHashCarp(subStr, 0, subStr.length - 1);
+let inputHsCarp = countHashCarp(inputStr, 0, subStr.length - 1);
+function findPositionsHashCarp(){
+	let positions = new Array();
+	let i = 0;
+	let curHash = inputHsCarp;
+	while (i <= n-m)
+	{
+		if (curHash == subStrHsCarp){
+			let j = 0;
+			while (inputStr[i+j] == subStr[j]){
+				j++;
+				if (j==m){
+					positions.push(i);
+					break;
+				}
+			}		
+		}
+		if (i!=n-m){
+			let hash1 = inputStr[i].charCodeAt()*Math.pow(2,subStr.length-1);
+			let hash2 = inputStr[i + subStr.length].charCodeAt();
+			curHash = (curHash - hash1)*2 + hash2;
+		}
+		i++;
+	}
+	return positions;
+}
+p = findPositionsHashCarp();
+console.log('Совпадающие позиции (алгоритм с использованием хэша Рабена Карпа )',p);

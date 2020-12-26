@@ -29,7 +29,6 @@ function compare(t1, t2){
 	return true
 }
 
-//надо написать код для нахождения rpr(l)
 for (let l = 0; l < T.length; l++){
 	rpr[l] = m
 	k = m

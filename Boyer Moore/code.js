@@ -2,7 +2,7 @@ let fs = require('fs');
 S = fs.readFileSync('inp.txt');
 S = S.toString();
 console.log('Input string: ', S);
-let T = 'ab';
+let T = 'abracad';
 console.log('Template: ', T)
 let n = new Array() //плохой суффикс
 for (let j = 0; j < T.length; j++)

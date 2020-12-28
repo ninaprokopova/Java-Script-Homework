@@ -29,7 +29,7 @@ function compare(t1, t2){
 }
 
 //надо написать код для нахождения rpr(l)
-for (let l = 0; l < T.length; l++){
+for (let l = 0; l <= T.length; l++){
 	rpr[l] = m
 	k = m
 	while (true){
@@ -47,7 +47,7 @@ for (let l = 0; l < T.length; l++){
 
 let shift2 = new Array()
 
-for (let l = 0; l < T.length; l++){
+for (let l = 0; l <= T.length; l++){
 	shift2[l] = m - rpr[l] - l + 1
 }
 
@@ -66,16 +66,11 @@ for (let i = 0; i <= S.length - m ; i++){
 		mes.push(i)
 	}
 	let ch = S[i + m - l - 1]
-	console.log(ch)
 	if (n[ch])
 		shift1 = Math.max(m - n[ch] - l, 1)
 	else
 		shift1 = Math.max(m - l, 1)
-	
-	if (l == 7)
-		shift = Math.max(shift1, 1)
-	else
-		shift = Math.max(shift1, shift2[l])
+	shift = Math.max(shift1, shift2[l])
 	i += shift - 1
 	
 }

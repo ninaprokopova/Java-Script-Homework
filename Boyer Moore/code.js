@@ -2,14 +2,13 @@ let fs = require('fs');
 S = fs.readFileSync('inp.txt');
 S = S.toString();
 console.log('Input string: ', S);
-let T = 'abracad';
+let T = 'cad';
 console.log('Template: ', T)
 let n = new Array() //плохой суффикс
 for (let j = 0; j < T.length; j++)
 	n[T.charAt(j)] = j+1
 // for (j in n)
 	// console.log(j, n[j])
-
 let mes = new Array() //массив с вхождениями
 
 let rpr = new Array()
@@ -29,6 +28,7 @@ function compare(t1, t2){
 	return true
 }
 
+//надо написать код для нахождения rpr(l)
 for (let l = 0; l < T.length; l++){
 	rpr[l] = m
 	k = m
@@ -71,7 +71,10 @@ for (let i = 0; i < S.length - m; i++){
 	}
 	else{
 		let ch = T[k]
-		shift1 = m - n[ch] - l
+		if (n[ch])
+			shift1 = Math.max(m - n[ch] - l, 1)
+		else
+			shift1 = Math.max(m - l, 1)
 	}
 	shift = Math.max(shift1, shift2[l])
 	i += shift - 1

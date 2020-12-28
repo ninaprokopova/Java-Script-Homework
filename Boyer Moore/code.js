@@ -55,28 +55,27 @@ console.log('Table Shift2')
 for (j in shift2)
 		console.log(j, shift2[j])
 	
-for (let i = 0; i < S.length - m; i++){
-	k = T.length - 1 //отвечает за индекс шаблона и подстроки
+for (let i = 0; i <= S.length - m ; i++){
 	l = 0 //показывает, сколько символов удачно сравнилось
-	while (k >= 0){
-		if  (S[i+k] != T[k])
+	while (l < m){
+		if  (S[i + m - l - 1] != T[m - l - 1])
 			break
 		l += 1
-		k -= 1	
 	} 
-	if (k == -1){
+	if (l == m){
 		mes.push(i)
-		shift1 = 1
-		l -= 1
 	}
-	else{
-		let ch = T[k]
-		if (n[ch])
-			shift1 = Math.max(m - n[ch] - l, 1)
-		else
-			shift1 = Math.max(m - l, 1)
-	}
-	shift = Math.max(shift1, shift2[l])
+	let ch = S[i + m - l - 1]
+	console.log(ch)
+	if (n[ch])
+		shift1 = Math.max(m - n[ch] - l, 1)
+	else
+		shift1 = Math.max(m - l, 1)
+	
+	if (l == 7)
+		shift = Math.max(shift1, 1)
+	else
+		shift = Math.max(shift1, shift2[l])
 	i += shift - 1
 	
 }
